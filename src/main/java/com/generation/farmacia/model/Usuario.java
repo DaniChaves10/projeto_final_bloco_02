@@ -32,6 +32,9 @@ public class Usuario {
 	@Size(min = 8, max = 255, message = "A Senha deve ter no mínimo 8 caracteres")
 	private String senha;
 	
+	public Usuario() { 
+	}
+	
 	public Usuario(Long id, String nome, String usuario, String senha) {
 		this.id = id;
 		this.nome = nome;

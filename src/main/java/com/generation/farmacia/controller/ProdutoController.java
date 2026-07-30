@@ -1,5 +1,6 @@
 package com.generation.farmacia.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,6 +85,16 @@ public class ProdutoController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
 		produtoRepository.deleteById(id);
+	}
+	
+	@GetMapping("/preco_maior/{preco}")
+	public ResponseEntity<List<Produto>> getPrecoMaiorQue(@PathVariable BigDecimal preco) {
+		return ResponseEntity.ok(produtoRepository.findByPrecoGreaterThanOrderByPrecoAsc(preco));
+	}
+
+	@GetMapping("/preco_menor/{preco}")
+	public ResponseEntity<List<Produto>> getPrecoMenorQue(@PathVariable BigDecimal preco) {
+		return ResponseEntity.ok(produtoRepository.findByPrecoLessThanOrderByPrecoDesc(preco));
 	}
 
 }

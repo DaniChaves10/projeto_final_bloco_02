@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.generation.farmacia.model.Usuario;
 import com.generation.farmacia.model.UsuarioLogin;
 import com.generation.farmacia.repository.UsuarioRepository;
+import com.generation.farmacia.security.JwtService;
 
 @Service
 public class UsuarioService {
@@ -24,13 +25,13 @@ public class UsuarioService {
     @Autowired
     private JwtService jwtService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+   @Autowired
+   private AuthenticationManager authenticationManager;
 
     public Optional<Usuario> cadastrarUsuario(Usuario usuario) {
 
         if (usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já existe!", null);
+        	return Optional.empty();
         
         usuario.setSenha(criptografarSenha(usuario.getSenha()));
 
@@ -54,7 +55,7 @@ public class UsuarioService {
         return Optional.empty();
     }
 
-    public Optional<UsuarioLogin> autenticarUsuario(Optional<UsuarioLogin> usuarioLogin) {
+   public Optional<UsuarioLogin> autenticarUsuario(Optional<UsuarioLogin> usuarioLogin) {
 
         if (usuarioLogin.isEmpty()) {
             return Optional.empty();
@@ -73,13 +74,12 @@ public class UsuarioService {
                 usuarioLogin.get().setNome(usuario.get().getNome());
                 usuarioLogin.get().setToken(gerarToken(usuarioLogin.get().getUsuario()));
                 usuarioLogin.get().setSenha("");
-                
+
                 return usuarioLogin;
             }
-        }
+        } 
 
-        return Optional.empty();
-    }
+         return Optional.empty();}
 
     private String criptografarSenha(String senha) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
